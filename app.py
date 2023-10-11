@@ -30,7 +30,7 @@ X_train, X_valid, y_train, y_valid = train_test_split(
 model_1 = RandomForestRegressor(n_estimators=50, random_state=0)
 model_2 = RandomForestRegressor(n_estimators=100, random_state=0)
 model_3 = RandomForestRegressor(
-    n_estimators=100, criterion="absolute_error", random_state=0
+    n_estimators=200, criterion="absolute_error", random_state=0
 )
 model_4 = RandomForestRegressor(n_estimators=200, min_samples_split=20, random_state=0)
 model_5 = RandomForestRegressor(n_estimators=100, max_depth=7, random_state=0)
@@ -50,3 +50,13 @@ def score_model(
 for i in range(0, len(models)):
     mae = score_model(models[i])
     print("Model %d MAE: %d" % (i + 1, mae))
+
+# Fit the model to the training data
+model_3.fit(X, y)
+
+# Generate test predictions
+preds_test = model_3.predict(X_test)
+
+# Save predictions in format used for competition scoring
+output = pd.DataFrame({"Id": X_test.index, "SalePrice": preds_test})
+output.to_csv("output/submission.csv", index=False)
